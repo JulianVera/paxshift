@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import ExperienceSection from '../components/ExperienceSection.astro';
+import CaseStudy from '../components/CaseStudy.astro';
+import TeamSection from '../components/TeamSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import JourneyLine from '../components/JourneyLine.astro';
+import TextLink from '../components/TextLink.astro';
+import { media } from '../data/media';
+import { site } from '../data/site';
+
+/**
+ * Destino del CTA final. Mientras no exista un contacto configurado en
+ * `src/data/site.ts`, el enlace se muestra como pendiente (sin aparentar funcionar).
+ */
+const contactHref: string | undefined =
+  site.contact.url || (site.contact.email ? `mailto:${site.contact.email}` : undefined);
+---
+
+<BaseLayout>
+  <SiteHeader />
+
+  <main>
+    <Hero />
+
+    {/* C. Declaración de valor */}
+    <section class="statement" aria-labelledby="statement-title">
+      <div class="container statement__inner">
+        <h2 id="statement-title" class="statement__title" data-reveal>
+          Detrás de cada viaje,<br />
+          <span class="statement__soft">hay decisiones que podemos mejorar.</span>
+        </h2>
+        <p class="statement__text" data-reveal style="--reveal-delay: 120ms">
+          Conectamos lo que necesitan las personas con lo que un negocio necesita resolver.
+        </p>
+        <JourneyLine variant="statement" class="statement__line" />
+      </div>
+    </section>
+
+    {/* D. Experiencia y casos */}
+    <ExperienceSection />
+
+    {/* E. Caso: Check-in */}
+    <CaseStudy
+      id="caso-checkin"
+      eyebrow="Check-in / UX de sistemas complejos"
+      title="Simplificar la operación en aeropuerto"
+      description="Una mirada sobre los flujos, la información y las decisiones del agente."
+      linkLabel="Explorar el enfoque"
+      image={media.checkinInterface}
+      caption="Visualización ilustrativa"
+    />
+
+    {/* F. Caso: E-commerce */}
+    <CaseStudy
+      id="caso-ecommerce"
+      eyebrow="E-commerce / Experiencia de pasajeros"
+      title="Conectar la compra con el viaje"
+      description="Claridad y continuidad en la búsqueda, la reserva y la gestión."
+      linkLabel="Explorar el enfoque"
+      image={media.bookingExperience}
+      caption="Visualización ilustrativa"
+      reverse
+    />
+
+    {/* G. Trabajo colaborativo */}
+    <TeamSection />
+
+    {/* H. CTA final */}
+    <section class="cta" id="hablemos" aria-labelledby="cta-title">
+      <div class="container cta__inner">
+        <h2 id="cta-title" class="cta__title" data-reveal>El próximo desafío puede ser el&nbsp;tuyo.</h2>
+        <TextLink href={contactHref} arrow accent class="cta__link">
+          Hablemos
+        </TextLink>
+        <JourneyLine variant="cta" draw class="cta__line" />
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  /* ----- Declaración ----- */
+  .statement {
+    padding-block: var(--space-7) 0;
+  }
+
+  .statement__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-5);
+    align-items: end;
+  }
+
+  .statement__title {
+    grid-column: 1 / -1;
+    position: relative;
+    z-index: 1;
+    font-size: var(--text-title-md);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-semibold);
+  }
+
+  .statement__soft {
+    font-weight: var(--weight-regular);
+  }
+
+  .statement__text {
+    grid-column: 1 / -1;
+    position: relative;
+    z-index: 1;
+    font-size: var(--text-small);
+    color: var(--color-ink-soft);
+    max-width: 26ch;
+    line-height: 1.45;
+  }
+
+  /* Línea (variables leídas por JourneyLine) */
+  .statement__inner {
+    --line-display: none;
+    --line-z: 0;
+  }
+
+  @media (min-width: 768px) {
+    .statement__title {
+      grid-column: 1 / 10;
+    }
+
+    .statement__text {
+      grid-column: 10 / 13;
+      padding-bottom: 0.35em;
+    }
+
+    .statement__inner {
+      --line-display: block;
+      /* Arranca por encima del título, continuando la línea del hero */
+      --line-top: -40%;
+      --line-height: 140%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .statement__title {
+      grid-column: 1 / 11;
+    }
+
+    .statement__text {
+      grid-column: 11 / 13;
+    }
+  }
+
+  /* ----- CTA final ----- */
+  .cta {
+    padding-block: var(--space-section) var(--space-section-sm);
+  }
+
+  .cta__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+    justify-items: start;
+  }
+
+  .cta__title {
+    position: relative;
+    z-index: 1;
+    font-size: var(--text-title-xl);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-semibold);
+    text-wrap: balance;
+    max-width: 14ch;
+  }
+
+  .cta__inner :global(.cta__link) {
+    position: relative;
+    z-index: 1;
+    font-size: var(--text-body);
+  }
+
+  /* Línea (variables leídas por JourneyLine) */
+  .cta__inner {
+    --line-z: 0;
+    --line-top: -70%;
+    --line-height: 240%;
+  }
+</style>

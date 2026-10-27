@@ -1,0 +1,32 @@
+---
+/**
+ * Lockup tipográfico temporal de Pax Shift.
+ * TODO: reemplazar por el SVG oficial del logo (isotipo + wordmark) cuando exista.
+ * No se reconstruye el isotipo para evitar una versión imprecisa.
+ */
+import { site } from '../data/site';
+
+interface Props {
+  href?: string;
+  label?: string;
+}
+
+const { href = '#inicio', label = `${site.name}, inicio` } = Astro.props;
+---
+
+<a href={href} class="wordmark" aria-label={label}>
+  <span class="wordmark__text">{site.wordmark}</span>
+</a>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    font-weight: var(--weight-semibold);
+    font-size: 1.125rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+</style>

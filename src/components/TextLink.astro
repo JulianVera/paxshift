@@ -1,0 +1,31 @@
+---
+/**
+ * Enlace de texto editorial con flecha opcional.
+ * Si no recibe `href`, se renderiza como texto pendiente (sin aparentar funcionar):
+ * misma jerarquía visual, sin interacción, con aviso solo para lectores de pantalla.
+ */
+interface Props {
+  href?: string;
+  arrow?: boolean;
+  accent?: boolean;
+  class?: string;
+}
+
+const { href, arrow = false, accent = false, class: className } = Astro.props;
+const classes = ['text-link', accent && 'text-link--coral', !href && 'text-link--pending', className];
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes}>
+      <slot />
+      {arrow && <span class="arrow" aria-hidden="true">↗</span>}
+    </a>
+  ) : (
+    <span class:list={classes}>
+      <slot />
+      {arrow && <span class="arrow" aria-hidden="true">↗</span>}
+      <span class="sr-only"> (próximamente)</span>
+    </span>
+  )
+}

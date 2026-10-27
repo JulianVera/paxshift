@@ -1,0 +1,54 @@
+---
+import { headerNav } from '../data/site';
+import TextLink from './TextLink.astro';
+import Wordmark from './Wordmark.astro';
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <Wordmark />
+    <nav class="site-nav" aria-label="Principal">
+      <ul class="site-nav__list">
+        {
+          headerNav.map((item) => (
+            <li>
+              <TextLink href={item.href} arrow={item.arrow} class="site-nav__link">
+                {item.label}
+              </TextLink>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: clamp(1.1rem, 2vw, 1.75rem);
+  }
+
+  .site-nav__list {
+    display: flex;
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+  }
+
+  .site-nav__list :global(.site-nav__link) {
+    font-size: var(--text-micro);
+    text-decoration-color: transparent;
+  }
+
+  .site-nav__list :global(.site-nav__link:hover),
+  .site-nav__list :global(.site-nav__link:focus-visible) {
+    text-decoration-color: currentColor;
+  }
+</style>

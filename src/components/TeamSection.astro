@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import { media } from '../data/media';
+import JourneyLine from './JourneyLine.astro';
+---
+
+<section class="team" id="equipo" aria-labelledby="team-title">
+  <div class="team__band">
+    <div class="container team__inner">
+      <div class="team__copy" data-reveal>
+        <h2 id="team-title" class="team__title">La experiencia se construye en&nbsp;equipo.</h2>
+        <p class="team__lead">Investigación, diseño y colaboración con equipos de producto y tecnología.</p>
+      </div>
+
+      <figure class="team__figure" data-reveal style="--reveal-delay: 120ms">
+        <Image
+          src={media.teamWorkshop.src}
+          alt={media.teamWorkshop.alt}
+          widths={[480, 800, 1200, 1800]}
+          sizes="(min-width: 1200px) 55vw, (min-width: 768px) 55vw, 100vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+
+    <JourneyLine variant="team" color="white" class="team__line" />
+  </div>
+</section>
+
+<style>
+  .team {
+    padding-top: var(--space-section);
+  }
+
+  .team__band {
+    position: relative;
+    background: var(--color-coral);
+    color: var(--color-white);
+    overflow: hidden;
+  }
+
+  .team__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-5);
+    align-items: center;
+    padding-block: clamp(3rem, 6vw, 6rem);
+  }
+
+  .team__copy {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .team__title {
+    font-size: var(--text-title-xl);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-semibold);
+    text-wrap: balance;
+    max-width: 14ch;
+  }
+
+  .team__lead {
+    font-size: var(--text-lead);
+    line-height: 1.4;
+    max-width: 34ch;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .team__figure {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  .team__figure img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  /* Línea blanca (variables leídas por JourneyLine) */
+  .team__band {
+    --line-z: 0;
+    --line-opacity: 0.9;
+  }
+
+  @media (min-width: 768px) {
+    .team__copy {
+      grid-column: 1 / 7;
+    }
+
+    .team__figure {
+      grid-column: 7 / 13;
+      /* Sangrado hacia el borde derecho del viewport */
+      margin-right: calc(-1 * ((100vw - min(var(--container-max), 100vw)) / 2 + var(--container-pad)));
+    }
+
+    .team__band {
+      --line-z: 2;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .team__inner {
+      padding-block: clamp(4rem, 7vw, 7rem);
+    }
+
+    .team__copy {
+      grid-column: 1 / 6;
+    }
+
+    .team__figure {
+      grid-column: 7 / 13;
+    }
+  }
+</style>

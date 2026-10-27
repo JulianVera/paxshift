@@ -1,0 +1,144 @@
+---
+/**
+ * Caso de estudio en dos columnas (texto + imagen).
+ * `reverse` invierte el orden en desktop: imagen a la izquierda, texto a la derecha.
+ */
+import { Image } from 'astro:assets';
+import type { MediaSlot } from '../data/media';
+import TextLink from './TextLink.astro';
+
+interface Props {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  linkLabel: string;
+  /** Destino del enlace. Si falta, se muestra como pendiente. */
+  linkHref?: string;
+  image: MediaSlot;
+  caption?: string;
+  reverse?: boolean;
+}
+
+const { id, eyebrow, title, description, linkLabel, linkHref, image, caption, reverse = false } = Astro.props;
+const titleId = `${id}-title`;
+---
+
+<article class:list={['case', reverse && 'case--reverse']} id={id} aria-labelledby={titleId}>
+  <div class="container case__inner">
+    <div class="case__copy" data-reveal>
+      <p class="eyebrow eyebrow--ink case__eyebrow">{eyebrow}</p>
+      <h2 id={titleId} class="case__title">{title}</h2>
+      <p class="lead case__lead">{description}</p>
+      <TextLink href={linkHref} arrow>{linkLabel}</TextLink>
+    </div>
+
+    <figure class="case__figure" data-reveal style="--reveal-delay: 120ms">
+      <Image
+        src={image.src}
+        alt={image.alt}
+        widths={[480, 800, 1200, 1600]}
+        sizes="(min-width: 1200px) 56vw, (min-width: 768px) 55vw, 100vw"
+        loading="lazy"
+        decoding="async"
+        style={`aspect-ratio: ${image.ratio}`}
+      />
+      {caption && <figcaption class="case__caption">{caption}</figcaption>}
+    </figure>
+  </div>
+</article>
+
+<style>
+  .case {
+    padding-top: var(--space-section-sm);
+  }
+
+  .case__inner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-5);
+    align-items: center;
+  }
+
+  .case__copy {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .case__eyebrow {
+    color: var(--color-ink);
+  }
+
+  .case__title {
+    font-size: var(--text-title-lg);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-semibold);
+    text-wrap: balance;
+    max-width: 14ch;
+  }
+
+  .case__lead {
+    max-width: 32ch;
+  }
+
+  .case__figure {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  .case__figure img {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .case__caption {
+    margin-top: var(--space-3);
+    font-size: var(--text-micro);
+    color: var(--color-ink-soft);
+  }
+
+  @media (min-width: 768px) {
+    .case__copy {
+      grid-column: 1 / 6;
+    }
+
+    .case__figure {
+      grid-column: 6 / 13;
+    }
+
+    .case--reverse .case__copy {
+      grid-column: 8 / 13;
+      order: 2;
+    }
+
+    .case--reverse .case__figure {
+      grid-column: 1 / 8;
+      order: 1;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .case {
+      padding-top: var(--space-section);
+    }
+
+    .case__copy {
+      grid-column: 1 / 5;
+    }
+
+    .case__figure {
+      grid-column: 6 / 13;
+    }
+
+    .case--reverse .case__copy {
+      grid-column: 9 / 13;
+    }
+
+    .case--reverse .case__figure {
+      grid-column: 1 / 8;
+    }
+  }
+</style>

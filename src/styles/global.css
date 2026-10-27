@@ -1,0 +1,186 @@
+@import './tokens.css';
+
+/* Reset breve */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+}
+
+/* Foco visible */
+:focus-visible {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Utilidades mínimas */
+.container {
+  width: min(var(--container-max), 100%);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Tipografía editorial compartida */
+.eyebrow {
+  display: inline-block;
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-coral);
+}
+
+.eyebrow--ink {
+  color: var(--color-ink);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-size: var(--text-small);
+}
+
+.lead {
+  font-size: var(--text-lead);
+  color: var(--color-ink-soft);
+  line-height: 1.4;
+  max-width: 34ch;
+}
+
+/* Enlace de texto con flecha */
+.text-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35em;
+  text-decoration-color: currentColor;
+  transition: text-decoration-color var(--duration-fast) ease;
+}
+
+.text-link .arrow {
+  display: inline-block;
+  font-weight: var(--weight-regular);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.text-link:hover .arrow,
+.text-link:focus-visible .arrow {
+  transform: translate(0.15em, -0.15em);
+}
+
+.text-link--coral {
+  color: var(--color-coral);
+}
+
+/* Enlace pendiente (sin destino todavía): misma jerarquía visual, sin href */
+.text-link--pending {
+  cursor: default;
+  text-decoration-color: var(--color-line);
+}
+
+/* Revelado progresivo (ver src/scripts/reveal.ts) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--duration-reveal) var(--ease-out),
+    transform var(--duration-reveal) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Sin JS: mostrar todo */
+html.no-js [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .text-link .arrow {
+    transition: none;
+  }
+}

@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+import { media } from '../data/media';
+import JourneyLine from './JourneyLine.astro';
+---
+
+<section class="experience" id="experiencia" aria-labelledby="experience-title">
+  <div class="container experience__inner">
+    <header class="experience__header" data-reveal>
+      <p class="eyebrow">Experiencia y casos</p>
+      <h2 id="experience-title" class="experience__title">Detrás de cada pantalla, un viaje real.</h2>
+      <p class="lead experience__lead">Experiencia del equipo en productos digitales para la industria aérea.</p>
+    </header>
+
+    <figure class="experience__figure" data-reveal>
+      <div class="experience__media">
+        <Image
+          src={media.airportExperience.src}
+          alt={media.airportExperience.alt}
+          widths={[640, 960, 1280, 1800, 2400]}
+          sizes="(min-width: 1360px) 1280px, 100vw"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="experience__overlay">
+          Personas.<br />Sistemas.<br />Decisiones.
+        </p>
+      </div>
+      <figcaption class="experience__note">
+        Trayectoria previa del equipo en KIU Systems. No implica una relación comercial con Pax Shift.
+      </figcaption>
+    </figure>
+
+    <JourneyLine variant="experience" class="experience__line" />
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding-block: var(--space-section) 0;
+  }
+
+  .experience__inner {
+    position: relative;
+  }
+
+  .experience__header {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-5);
+    max-width: 44rem;
+  }
+
+  .experience__title {
+    font-size: var(--text-title-xl);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-semibold);
+    text-wrap: balance;
+  }
+
+  .experience__lead {
+    max-width: 40ch;
+  }
+
+  .experience__figure {
+    position: relative;
+    margin: var(--space-7) 0 0;
+    z-index: 1;
+  }
+
+  .experience__media {
+    position: relative;
+  }
+
+  .experience__figure img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .experience__overlay {
+    position: absolute;
+    left: clamp(1rem, 4vw, 3.5rem);
+    bottom: clamp(1rem, 4vw, 3rem);
+    color: var(--color-white);
+    font-size: var(--text-title-xl);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-semibold);
+    text-shadow: 0 1px 24px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+  }
+
+  .experience__note {
+    margin-top: var(--space-3);
+    font-size: var(--text-micro);
+    color: var(--color-ink-soft);
+  }
+
+  /* Línea: cubre cabecera y arranque de la foto (variables leídas por JourneyLine) */
+  .experience__inner {
+    --line-z: 0;
+    --line-height: clamp(14rem, 36vw, 32rem);
+  }
+
+  @media (min-width: 768px) {
+    .experience__figure img {
+      aspect-ratio: 2 / 1;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .experience__header {
+      max-width: 52rem;
+    }
+
+    .experience__inner {
+      --line-z: 2;
+    }
+  }
+</style>

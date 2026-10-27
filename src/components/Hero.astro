@@ -1,0 +1,397 @@
+---
+import { Image } from 'astro:assets';
+import { media } from '../data/media';
+import { site } from '../data/site';
+import JourneyLine from './JourneyLine.astro';
+import TextLink from './TextLink.astro';
+---
+
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div class="hero__copy" data-reveal>
+      <h1 id="hero-title" class="hero__title">Hacemos más simple&nbsp;viajar.</h1>
+      <p class="lead hero__lead">Diseñamos experiencias digitales para aerolíneas y agencias de viajes.</p>
+      <TextLink href={site.anchors.contact} arrow class="hero__cta">Hablemos de tu producto</TextLink>
+    </div>
+
+    <figure class="hero__portrait" data-reveal style="--reveal-delay: 120ms">
+      <Image
+        src={media.heroTraveler.src}
+        alt={media.heroTraveler.alt}
+        widths={[480, 720, 960, 1200]}
+        sizes="(min-width: 1200px) 33vw, (min-width: 768px) 42vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <span class="hero__tag hero__tag--personas">Personas</span>
+    </figure>
+
+    <figure class="hero__aircraft" data-reveal style="--reveal-delay: 220ms">
+      <Image
+        src={media.heroAircraft.src}
+        alt={media.heroAircraft.alt}
+        widths={[480, 800, 1200, 1600]}
+        sizes="(min-width: 1200px) 50vw, (min-width: 768px) 58vw, 100vw"
+        loading="eager"
+        decoding="async"
+      />
+      <span class="hero__tag hero__tag--operacion">Operación</span>
+
+      <div class="hero__widget" data-reveal style="--reveal-delay: 360ms">
+        <span class="hero__tag hero__tag--interfaces">Interfaces</span>
+        <div
+          class="search"
+          role="img"
+          aria-label="Ilustración de un buscador de vuelos: ida y vuelta de Buenos Aires a Madrid, del 10 al 21 de octubre."
+        >
+          <div class="search__meta">
+            <span>Ida y vuelta</span>
+            <span>1 pasajero</span>
+          </div>
+          <div class="search__route">
+            <div class="search__field">
+              <small>Desde</small>
+              <strong>Buenos Aires</strong>
+              <span>EZE</span>
+            </div>
+            <span class="search__swap">→</span>
+            <div class="search__field">
+              <small>Hasta</small>
+              <strong>Madrid</strong>
+              <span>MAD</span>
+            </div>
+          </div>
+          <div class="search__dates">
+            <div class="search__field">
+              <small>Fechas</small>
+              <strong>10 oct — 21 oct</strong>
+            </div>
+            <span class="search__go">→</span>
+          </div>
+        </div>
+      </div>
+    </figure>
+
+    <JourneyLine variant="hero" draw class="hero__line" />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(1rem, 2vw, 2rem) var(--space-7);
+  }
+
+  .hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--space-5);
+    row-gap: var(--space-6);
+  }
+
+  /* ----- Copy ----- */
+  .hero__copy {
+    grid-column: 1 / -1;
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+    padding-top: clamp(0.5rem, 2vw, 2.5rem);
+  }
+
+  .hero__title {
+    font-size: var(--text-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    font-weight: var(--weight-semibold);
+    max-width: 13ch;
+  }
+
+  .hero__lead {
+    max-width: 30ch;
+  }
+
+  /* ----- Figuras ----- */
+  .hero__portrait,
+  .hero__aircraft {
+    position: relative;
+    margin: 0;
+  }
+
+  .hero__portrait img,
+  .hero__aircraft img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__portrait {
+    grid-column: 1 / -1;
+    z-index: 2;
+  }
+
+  .hero__portrait img {
+    aspect-ratio: 4 / 5;
+  }
+
+  .hero__aircraft {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .hero__aircraft img {
+    aspect-ratio: 2 / 1;
+    order: 2;
+  }
+
+  /* ----- Microetiquetas ----- */
+  .hero__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-micro);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.02em;
+    color: var(--color-coral);
+    white-space: nowrap;
+  }
+
+  .hero__tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-coral);
+    flex: none;
+  }
+
+  /* En mobile las etiquetas se apoyan sobre la esquina de cada foto */
+  .hero__tag--personas,
+  .hero__tag--operacion {
+    position: absolute;
+    left: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    background: var(--color-bg);
+    border-radius: 999px;
+  }
+
+  .hero__tag--personas {
+    top: 0.75rem;
+  }
+
+  .hero__tag--operacion {
+    bottom: 0.75rem;
+  }
+
+  .hero__tag--interfaces {
+    margin-bottom: 0.75rem;
+  }
+
+  /* ----- Widget de búsqueda (ilustrativo) ----- */
+  .hero__widget {
+    position: relative;
+    order: 1;
+  }
+
+  .search {
+    background: var(--color-white);
+    border: 1px solid rgba(16, 16, 16, 0.06);
+    border-radius: 12px;
+    padding: clamp(0.85rem, 1.5vw, 1.1rem) clamp(1rem, 1.8vw, 1.35rem);
+    display: grid;
+    gap: 0.8rem;
+    font-size: var(--text-small);
+    box-shadow: 0 18px 40px -28px rgba(16, 16, 16, 0.35);
+    max-width: 30rem;
+  }
+
+  .search__meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-micro);
+    color: var(--color-ink-soft);
+  }
+
+  .search__route,
+  .search__dates {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .search__field {
+    display: grid;
+    gap: 0.1rem;
+    line-height: 1.2;
+    min-width: 0;
+  }
+
+  .search__field small {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .search__field strong {
+    font-weight: var(--weight-semibold);
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .search__field span {
+    font-size: 0.7rem;
+    color: var(--color-ink-soft);
+  }
+
+  .search__swap {
+    color: var(--color-ink-soft);
+    flex: none;
+  }
+
+  .search__dates {
+    border-top: 1px solid rgba(16, 16, 16, 0.08);
+    padding-top: 0.8rem;
+  }
+
+  .search__go {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--color-coral);
+    color: var(--color-white);
+    font-size: 1rem;
+  }
+
+  /* ----- Línea (variables leídas por JourneyLine) ----- */
+  .hero__grid {
+    --line-display: none;
+  }
+
+  /* ----- Tablet ----- */
+  @media (min-width: 768px) {
+    .hero__grid {
+      grid-template-rows: auto auto;
+    }
+
+    .hero__copy {
+      grid-column: 1 / 8;
+      grid-row: 1;
+    }
+
+    .hero__portrait {
+      grid-column: 8 / 13;
+      grid-row: 1 / 3;
+      align-self: start;
+    }
+
+    .hero__portrait img {
+      aspect-ratio: 2 / 3;
+    }
+
+    .hero__aircraft {
+      grid-column: 1 / 8;
+      grid-row: 2;
+      display: block;
+      margin-top: var(--space-6);
+    }
+
+    .hero__widget {
+      position: absolute;
+      left: 6%;
+      top: -14%;
+      width: 68%;
+      z-index: 3;
+    }
+
+    .hero__tag--interfaces {
+      position: absolute;
+      left: 0;
+      bottom: 100%;
+      transform: translateY(-0.5rem);
+      margin: 0;
+      padding: 0.25rem 0.6rem;
+      background: var(--color-bg);
+      border-radius: 999px;
+    }
+
+    .hero__tag--operacion {
+      left: auto;
+      right: 0.75rem;
+    }
+
+    .hero__grid {
+      --line-display: block;
+      --line-z: 2;
+    }
+  }
+
+  /* ----- Desktop ----- */
+  @media (min-width: 1200px) {
+    .hero__grid {
+      grid-template-rows: auto auto;
+    }
+
+    .hero__copy {
+      grid-column: 1 / 8;
+      grid-row: 1;
+      padding-bottom: var(--space-6);
+    }
+
+    .hero__portrait {
+      grid-column: 8 / 12;
+      grid-row: 1 / 3;
+    }
+
+    .hero__aircraft {
+      grid-column: 3 / 9;
+      grid-row: 2;
+      align-self: start;
+      margin-top: 0;
+    }
+
+    .hero__widget {
+      left: -9%;
+      top: -5%;
+      width: 60%;
+    }
+
+    .hero__tag--personas,
+    .hero__tag--operacion,
+    .hero__tag--interfaces {
+      padding: 0;
+      background: none;
+      border-radius: 0;
+    }
+
+    .hero__tag--personas {
+      top: 9%;
+      left: calc(100% + 1rem);
+    }
+
+    .hero__tag--interfaces {
+      left: auto;
+      right: calc(100% + 1rem);
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      flex-direction: row-reverse;
+    }
+
+    .hero__tag--operacion {
+      right: auto;
+      left: calc(100% + 1rem);
+      bottom: 14%;
+    }
+  }
+</style>

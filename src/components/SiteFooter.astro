@@ -1,0 +1,87 @@
+---
+import { footerClaim, footerNav, site } from '../data/site';
+import TextLink from './TextLink.astro';
+import Wordmark from './Wordmark.astro';
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <Wordmark label={`${site.name}, volver arriba`} />
+
+    <nav class="footer-nav" aria-label="Pie de página">
+      <ul class="footer-nav__list">
+        {
+          footerNav.map((item) => (
+            <li>
+              <TextLink href={item.href} arrow={item.arrow} accent={item.accent} class="footer-nav__link">
+                {item.label}
+              </TextLink>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <p class="site-footer__claim">{footerClaim}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-line);
+    margin-top: var(--space-section-sm);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: var(--space-5) var(--space-6);
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .footer-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+  }
+
+  .footer-nav__list :global(.footer-nav__link) {
+    font-size: var(--text-micro);
+    text-decoration-color: transparent;
+  }
+
+  .footer-nav__list :global(.footer-nav__link:hover),
+  .footer-nav__list :global(.footer-nav__link:focus-visible) {
+    text-decoration-color: currentColor;
+  }
+
+  .site-footer__claim {
+    font-size: var(--text-micro);
+    color: var(--color-ink-soft);
+    line-height: 1.4;
+    max-width: 16ch;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__inner {
+      grid-template-columns: auto 1fr auto;
+    }
+
+    .footer-nav {
+      justify-self: center;
+    }
+
+    .site-footer__claim {
+      text-align: right;
+      justify-self: end;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .footer-nav {
+      justify-self: end;
+      margin-right: clamp(2rem, 8vw, 8rem);
+    }
+  }
+</style>

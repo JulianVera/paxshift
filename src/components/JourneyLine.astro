@@ -1,0 +1,187 @@
+---
+/**
+ * Línea gráfica de Pax Shift: trayectorias Bézier finas con nodos circulares.
+ *
+ * El SVG se estira para cubrir al contenedor posicionado (`preserveAspectRatio="none"`)
+ * y usa `vector-effect="non-scaling-stroke"` para que el trazo conserve ~1.25 px
+ * y los nodos sigan siendo círculos aunque el viewBox se deforme.
+ *
+ * Cada variante define una trayectoria desktop y otra simplificada para mobile.
+ * Es puramente decorativa: `aria-hidden` y `pointer-events: none`.
+ */
+type Variant = 'hero' | 'statement' | 'experience' | 'team' | 'cta';
+
+interface Props {
+  variant: Variant;
+  color?: 'coral' | 'white';
+  /** Anima el dibujo del trazo al entrar en viewport (ver scripts/reveal.ts). */
+  draw?: boolean;
+  class?: string;
+}
+
+interface Shape {
+  viewBox: string;
+  /** Trazos desktop/tablet. */
+  paths: string[];
+  /** Trazos mobile (< 768 px). */
+  mobilePaths: string[];
+  /** Nodos [x, y] para desktop. */
+  nodes: Array<[number, number]>;
+  /** Nodos [x, y] para mobile. */
+  mobileNodes: Array<[number, number]>;
+}
+
+const shapes: Record<Variant, Shape> = {
+  hero: {
+    viewBox: '0 0 1000 700',
+    paths: [
+      // Del CTA hacia "Interfaces" y, atravesando el retrato, hasta "Personas".
+      'M 258 470 C 290 470, 296 500, 318 500 C 400 500, 440 400, 540 320 C 660 225, 800 130, 936 62',
+      // Por debajo del avión hacia "Operación" y salida hacia la sección siguiente.
+      'M 20 585 C 140 585, 190 690, 330 690 C 520 690, 640 690, 764 656 C 850 632, 900 600, 1000 560',
+    ],
+    mobilePaths: ['M 0 120 C 260 120, 300 60, 520 60 C 760 60, 820 110, 1000 110'],
+    // Los nodos del hero los aportan las microetiquetas (Personas, Interfaces, Operación).
+    nodes: [],
+    mobileNodes: [[520, 60]],
+  },
+  statement: {
+    viewBox: '0 0 1000 400',
+    paths: ['M 1000 12 C 905 40, 885 190, 720 178 C 640 172, 606 112, 566 92'],
+    mobilePaths: ['M 1000 20 C 900 24, 860 90, 760 90 C 700 90, 680 70, 650 62'],
+    nodes: [[566, 92]],
+    mobileNodes: [[650, 62]],
+  },
+  experience: {
+    viewBox: '0 0 1000 600',
+    paths: ['M 1000 30 C 940 50, 884 110, 874 200 C 866 280, 852 332, 812 356'],
+    // En mobile la cabecera ocupa todo el ancho: se omite la línea.
+    mobilePaths: [],
+    nodes: [[812, 356]],
+    mobileNodes: [],
+  },
+  team: {
+    viewBox: '0 0 1000 500',
+    paths: ['M 0 462 C 160 462, 300 480, 430 438 C 570 392, 700 300, 1000 326'],
+    mobilePaths: ['M 0 478 C 200 478, 300 430, 560 430 C 760 430, 820 460, 1000 452'],
+    nodes: [[430, 438]],
+    mobileNodes: [[560, 430]],
+  },
+  cta: {
+    viewBox: '0 0 1000 400',
+    // Se mantiene a la derecha del titular (x > 55 %).
+    paths: ['M 1000 70 C 900 86, 780 150, 730 250 C 690 330, 650 362, 580 372'],
+    mobilePaths: ['M 1000 40 C 900 60, 860 140, 900 220'],
+    nodes: [[580, 372]],
+    mobileNodes: [],
+  },
+};
+
+const { variant, color = 'coral', draw = false, class: className } = Astro.props;
+const shape = shapes[variant];
+const node = ([x, y]: [number, number]) => `M ${x} ${y} h 0.01`;
+---
+
+<svg
+  class:list={['journey', `journey--${variant}`, `journey--${color}`, className]}
+  viewBox={shape.viewBox}
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+  data-draw={draw ? '' : undefined}
+>
+  <g class="journey__desktop">
+    {shape.paths.map((d) => <path d={d} class="journey__path" data-stroke vector-effect="non-scaling-stroke" />)}
+    {shape.nodes.map((n) => <path d={node(n)} class="journey__node" vector-effect="non-scaling-stroke" />)}
+  </g>
+  <g class="journey__mobile">
+    {shape.mobilePaths.map((d) => <path d={d} class="journey__path" data-stroke vector-effect="non-scaling-stroke" />)}
+    {shape.mobileNodes.map((n) => <path d={node(n)} class="journey__node" vector-effect="non-scaling-stroke" />)}
+  </g>
+</svg>
+
+<style>
+  /*
+    Posicionamiento controlado por el contenedor padre mediante variables:
+    --line-display, --line-top, --line-height, --line-z, --line-opacity.
+  */
+  .journey {
+    position: absolute;
+    top: var(--line-top, 0);
+    left: 0;
+    width: 100%;
+    height: var(--line-height, 100%);
+    display: var(--line-display, block);
+    z-index: var(--line-z, 0);
+    opacity: var(--line-opacity, 1);
+    overflow: visible;
+    pointer-events: none;
+    color: var(--color-coral);
+  }
+
+  .journey--white {
+    color: var(--color-white);
+  }
+
+  .journey__path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--journey-stroke);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .journey__node {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 6px;
+    stroke-linecap: round;
+  }
+
+  .journey__mobile {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .journey__desktop {
+      display: none;
+    }
+
+    .journey__mobile {
+      display: block;
+    }
+  }
+
+  /* Dibujo del trazo (solo cuando data-draw y JS activo). */
+  .journey.is-ready .journey__path {
+    stroke-dasharray: var(--path-length);
+    stroke-dashoffset: var(--path-length);
+  }
+
+  .journey.is-ready .journey__node {
+    opacity: 0;
+  }
+
+  .journey.is-drawn .journey__path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1400ms var(--ease-out);
+  }
+
+  .journey.is-drawn .journey__node {
+    opacity: 1;
+    transition: opacity 400ms ease 1000ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journey.is-ready .journey__path {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+
+    .journey.is-ready .journey__node {
+      opacity: 1;
+      transition: none;
+    }
+  }
+</style>
